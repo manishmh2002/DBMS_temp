@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>File Upload</title>
+  <link rel="stylesheet" href="style.css"> </head>
+<body>
+  <h1>Upload Your File</h1>
+  <form id="uploadForm" method="post" enctype="multipart/form-data">
+    <input type="file" name="myFile" id="fileInput" accept="*"> 
+    <label for="fileInput" class="file-upload-button">Choose File</label> 
+    <button type="submit">Upload</button>
+  </form>
+
+  <script>
+    const uploadForm = document.getElementById('uploadForm');
+    const fileInput = document.getElementById('fileInput');
+
+    uploadForm.addEventListener('submit', (event) => {
+      event.preventDefault(); // Prevent default form submission
+
+      const file = fileInput.files[0];
+      const reader = new FileReader();
+
+      reader.onload = function(e) {
+        const fileData = {
+          filename: file.name,
+          contents: e.target.result
+        };
+        sendDataToBackend(fileData); 
+      };
+
+      reader.readAsDataURL(file); // Read file as a data URL
+    });
+
+    function sendDataToBackend(data) {
+      // Implement using XMLHttpRequest or the Fetch API
+      // Example with Fetch API:
+      fetch('/your-backend-endpoint', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => {
+        // Handle the response from your backend here
+        console.log('Success:', response);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    }
+  </script>
+</body>
+</html>
